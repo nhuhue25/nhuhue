@@ -71,7 +71,7 @@ public class ChromeTest {
             //System.out.println("Response Url => " + responseReceived.getResponse().getUrl());
             System.out.println("Response Status => " + responseReceived.getResponse().getStatus());
             System.out.println("Response Headers => " + responseReceived.getResponse().getHeaders().toString());
-            System.out.println("Response MIME Type => " + responseReceived.getResponse().getMimeType().toString());
+            //System.out.println("Response MIME Type => " + responseReceived.getResponse().getMimeType().toString());
             System.out.println("------------------------------------------------------");
         });
 
