@@ -2,9 +2,11 @@ package utils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,11 +17,10 @@ import java.time.Duration;
 public class Browser {
     private static WebDriver driver;
     public static WebDriverWait wait;
-    /*
-     open browser: chrome, firefox, edge, safari
-     return WebDriver
-     static method
-     */
+    private static Actions getActions() {
+        return new Actions(driver);
+    }
+
     public static void openBrowser(String browser) {
         switch (browser.toLowerCase()) {
             case "chrome":
@@ -40,40 +41,68 @@ public class Browser {
         }
         wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
+
     public static WebDriver getDriver() {
         return driver;
     }
-    public static void visit(String url){
+
+    public static void visit(String url) {
         driver.get(url);
     }
+
     public static void quit() {
         driver.quit();
     }
-    public static void click(By by){
+
+    public static void click(By by) {
         wait
                 .until(ExpectedConditions.elementToBeClickable(by))
                 .click();
     }
-    public static void fill(By by,String withText){
+
+    public static void fill(By by, String withText) {
         driver.findElement(by).sendKeys(withText);
     }
 
-    public static boolean isSelected(By by){
+    public static boolean isSelected(By by) {
         return driver.findElement(by).isSelected();
     }
 
-    public static void check(By by){
-        if(!isSelected(by)){
+    public static void check(By by) {
+        if (!isSelected(by)) {
             click(by);
         }
     }
 
-    public static String getText(By by){
+    public static void uncheck(By by) {
+        if (isSelected(by)) {
+            click(by);
+        }
+    }
+
+    public static String getText(By by) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(by)).getText();
     }
-    public static String getCurrentUrl(){
+
+    public static String getCurrentUrl() {
         return driver.getCurrentUrl();
     }
+
+    public static void dragAndDrop (By source, By target) {
+        getActions().dragAndDrop(driver.findElement(source), driver.findElement(target))
+                .perform();
+    }
+
+    public static void slider(By by, int xOffset, int yOffset) {
+        WebElement slider = driver.findElement(by);
+        getActions().clickAndHold(slider)
+                .moveByOffset(xOffset, yOffset)
+                .release()
+                .perform();
+
+    }
+
+
 
 }
 

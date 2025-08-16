@@ -6,53 +6,53 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.heroku.HyperlinkPage;
 
 import java.time.Duration;
 
+import static utils.Browser.*;
+
 public class HyperLinkTest {
-    @Test
-    void verifyAbleNavigateHyperlink() {
-        WebDriver driver = new ChromeDriver();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        driver.get("https://the-internet.herokuapp.com/status_codes");
-        // click link status code 200
-        // <a href="status_codes/200">200</a>
-        driver.findElement(By.xpath("//a[@href='status_codes/200']")).click();
-        driver.findElement(By.xpath("//a[.='200']/@href")).click();
+        HyperlinkPage hyperlinkPage;
+        @BeforeClass
+        void setup(){
+            openBrowser("chrome");
+            hyperlinkPage = new HyperlinkPage();
+        }
+        @BeforeMethod
+        void openPage(){
+            hyperlinkPage.open();
+        }
+        @Test
+        void redirect() {
+            hyperlinkPage.clickStatusCode("here");
+            Assert.assertEquals(getCurrentUrl(), "https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml");
+        }
+        @Test
+        void workAroundInStatusCodePage() {
+            hyperlinkPage.clickStatusCode("200");
+            Assert.assertTrue(hyperlinkPage.isStatusCodeDisplayed("200"), "Status code 200 is not displayed");
+            hyperlinkPage.clickStatusCode("here");
 
-        String href = driver.findElement(By.linkText("200")).getDomAttribute("href");
-        driver.findElement(By.linkText("200")).click();
-        Assert.assertTrue(driver.getCurrentUrl().contains(href));
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("content"))));
-        String content = driver.findElement(By.id("content")).getText();
-        Assert.assertTrue(content.contains("This page returned a 200 status code"));
+            hyperlinkPage.clickStatusCode("301");
+            Assert.assertTrue(hyperlinkPage.isStatusCodeDisplayed("301"), "Status code 301 is not displayed");
+            hyperlinkPage.clickStatusCode("here");
 
-        // 301 test
-        driver.findElement(By.linkText("here")).click();
-        driver.findElement(By.linkText("301")).click();
-        Assert.assertEquals(driver.getCurrentUrl(), "https://the-internet.herokuapp.com/status_codes/301");
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("content"))));
-        content = driver.findElement(By.id("content")).getText();
-        Assert.assertTrue(content.contains("This page returned a 301 status code."));
+            hyperlinkPage.clickStatusCode("404");
+            Assert.assertTrue(hyperlinkPage.isStatusCodeDisplayed("404"), "Status code 404 is not displayed");
+            hyperlinkPage.clickStatusCode("here");
 
-        //404 test
-        driver.findElement(By.linkText("here")).click();
-        driver.findElement(By.linkText("404")).click();
-        Assert.assertEquals(driver.getCurrentUrl(), "httpxxxxxxxxs://the-internet.herokuapp.com/status_codes/404");
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("content"))));
-        content = driver.findElement(By.id("content")).getText();
-        Assert.assertTrue(content.contains("This page returned a 404 status code."));
-
-        //500 test
-        driver.findElement(By.linkText("here")).click();
-        driver.findElement(By.linkText("500")).click();
-        Assert.assertEquals(driver.getCurrentUrl(), "https://the-internet.herokuapp.com/status_codes/500");
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.id("content"))));
-        content = driver.findElement(By.id("content")).getText();
-        Assert.assertTrue(content.contains("This page returned a 500 status code."));
-
+            hyperlinkPage.clickStatusCode("500");
+            Assert.assertTrue(hyperlinkPage.isStatusCodeDisplayed("500"), "Status code 500 is not displayed");
+            hyperlinkPage.clickStatusCode("here");
+        }
+    @AfterClass
+    void teardown(){
+        quit();
     }
-
 }

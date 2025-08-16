@@ -1,0 +1,8 @@
+<suite name="bmicalculator">
+    <test name="bmicalculator">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="calculator.BMICalculatorTest"/>
+        </classes>
+    </test>
+</suite>

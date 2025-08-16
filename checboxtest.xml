@@ -1,0 +1,8 @@
+<suite name="hyperlinktest">
+    <test name="hyperlinktest">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="heroku.HyperLinkTest"/>
+        </classes>
+    </test>
+</suite>
